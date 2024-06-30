@@ -37,6 +37,10 @@ Windows10以前だと動きません。）
 
 * [ウェブカメラテスト](https://ja.webcamtests.com/)
 
+## 解説記事（Qiita）
+* [MediaFoundationの仮想カメラで、キャプチャしたウィンドウを映してみた](https://qiita.com/HexagramNM/items/52f5442f26dce89d3502)
+
+* [DirectXでテクスチャを別プロセスに共有する](https://qiita.com/HexagramNM/items/5fa74f59f0b7bb4b80e9)
 
 ## やっていること
 
@@ -48,7 +52,7 @@ Media Foundationの仮想カメラはFrameServerというサービス上で、Lo
 保存し、FrameServer上の仮想カメラでこの共有テクスチャを参照できるようにしております。
 ウィンドウのサイズなどのパラメタもこの方法で転送しております。
 
-共有テクスチャの作成には
+共有テクスチャのハンドル作成には
 [IDXGIResource1::CreateSharedHandle](https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_2/nf-dxgi1_2-idxgiresource1-createsharedhandle)
 を使用しております。
 
@@ -59,7 +63,7 @@ Media Foundationの仮想カメラはFrameServerというサービス上で、Lo
 仮想カメラでアクセスできる共有テクスチャの作成を行うdllです。
 `SampleDriverApp`でこのdllが使われます。
 
-仮想カメラの起動も`NM_CaptureWindow`で行っております。
+    - 仮想カメラの起動も`NM_CaptureWindow`で行っております。
 
 * `VCamSampleSource` (C++)... Media Foundationによる仮想カメラの本体です。
 基本的には[VCamSample](https://github.com/smourier/VCamSample)をそのまま使用しておりますが、
@@ -72,38 +76,39 @@ Media Foundationの仮想カメラはFrameServerというサービス上で、Lo
 
 * `SampleDriverApp` (C#)... WPFで作ったサンプルのGUIです。
 プログレスバーを適当に動かしております。
-`NM_CaptureWindow.cs`で`NM_CaptureWindow.dll`にアクセスできるようにしております。
+
+    - `NM_CaptureWindow.cs`で`NM_CaptureWindow.dll`にアクセスできるようにしております。
 
 
 ## ビルド方法
 
 1. `NM_MFVCamSample.sln`を開き、ソリューションをビルドします。
 
-    - VisualStudio2022でプロジェクトを作っています。
+    - VisualStudio2022でプロジェクトを作成しております。
 
     - `NM_CaptureWindow`はビルド後、生成された`NM_CaptureWindow.dll`が
     `SampleDriverApp.exe`のあるフォルダにコピーされるように設定しております。
 
-2. `NM_MFVCamSample`のフォルダに`Users`の読み取りと実行のアクセス権限を付与する。
+2. `NM_MFVCamSample`のフォルダに`Users`の読み取りと実行のアクセス権限を付与します。
 フォルダのプロパティから設定できます。
 
     ![SecuritySetting](ReadmeAssets/SecuritySetting.png)
 
     - FrameServerが仮想カメラのdllである`x64/[Release or Debug]/VCamSampleSource.dll`
-    にアクセスできるようにするため
+    にアクセスできるようにするため必要です。
 
 3. `RegisterVirtualCamera.bat`の中身を確認した上で、管理者権限で実行し、
-ビルドされた仮想カメラをインストールする。
+ビルドされた仮想カメラをインストールします。
 
     - Releaseビルドしたものを登録するようにしているので、Debugビルドのものを登録する場合は
-    Releaseの部分をDebugに書き換える。
+    Releaseの部分をDebugに書き換えてください。
 
     - アンインストールする場合は、`UnregisterVirtualCamera.bat`の中身を確認した上で、
-    管理者権限で実行する。
-    こちらもReleaseビルド用になっているので、必要に応じてDebugに書き換える。
+    管理者権限で実行してください。
+    こちらもReleaseビルド用になっているので、必要に応じてDebugに書き換えてください。
 
-4. `SampleDriverApp/bin/[Release or Debug]/net7.0-windows/SampleDriverApp.exe`を起動する。
+4. `SampleDriverApp/bin/[Release or Debug]/net7.0-windows/SampleDriverApp.exe`を起動します。
 
     - 起動するとカメラを使用するアプリケーションのカメラ一覧に
-    `NM_Capture_Window_VCam_Sample`が出現する。
-    これを選択すると`SampleDriverApp`の画面がカメラ上に表示される。
+    `NM_Capture_Window_VCam_Sample`が出現します。
+    これを選択すると`SampleDriverApp`の画面がカメラ上に表示されます。
