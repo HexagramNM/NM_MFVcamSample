@@ -114,9 +114,6 @@ HRESULT MediaStream::SetD3DManager(IUnknown* manager)
 {
 	RETURN_HR_IF_NULL(E_POINTER, manager);
 
-	// comment these 2 lines to force CPU usage
-	RETURN_IF_FAILED(_allocator->SetDirectXManager(manager));
-	RETURN_IF_FAILED(_generator.SetD3DManager(manager, NUM_IMAGE_COLS, NUM_IMAGE_ROWS));
 	return S_OK;
 }
 

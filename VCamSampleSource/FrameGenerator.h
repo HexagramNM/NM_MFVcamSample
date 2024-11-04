@@ -5,10 +5,7 @@
 
 using namespace winrt;
 
-#define MAX_SOURCE_WIDTH 3840
-#define MAX_SOURCE_HEIGHT 2160
 #define MUTEX_KEY 5556
-#define SHARED_PARAMS_BUF 32
 
 class FrameGenerator
 {
@@ -27,7 +24,7 @@ class FrameGenerator
 	wil::com_ptr_nothrow<IWICBitmap> _bitmap;
 	wil::com_ptr_nothrow<IMFDXGIDeviceManager> _dxgiManager;
 
-	HRESULT CreateRenderTargetResources(UINT width, UINT height);
+	HRESULT CreateRenderTargetResources();
 
 	// 共有テクスチャのために追加した部分
 	com_ptr<ID3D11Device1> _textureDevice;
@@ -37,14 +34,14 @@ class FrameGenerator
 	HANDLE _sharedCaptureWindowHandle;
 	com_ptr<ID3D11Texture2D> _cpuCaptureWindowTexture;
 	com_ptr<ID2D1Bitmap> _captureWindowBitmap;
+	int _captureTextureWidth;
+	int _captureTextureHeight;
 	
 	com_ptr<ID3D11Texture2D> _sharedParamsTexture;
 	HANDLE _sharedParamsHandle;
 	com_ptr<ID3D11Texture2D> _cpuParamsTexture;
 	int _captureWindowWidth;
 	int _captureWindowHeight;
-
-	void CreateDirectXDeviceForTexture();
 
 	void CreateSharedCaptureWindowTexture();
 
@@ -63,12 +60,11 @@ public:
 		_fps(0),
 		_deviceHandle(nullptr),
 		_prevTime(MFGetSystemTime()),
-		_captureWindowWidth(MAX_SOURCE_WIDTH),
-		_captureWindowHeight(MAX_SOURCE_HEIGHT)
+		_captureTextureWidth(0),
+		_captureTextureHeight(0),
+		_captureWindowWidth(0),
+		_captureWindowHeight(0)
 	{
-		CreateDirectXDeviceForTexture();
-		CreateSharedCaptureWindowTexture();
-		CreateSharedParamsTexture();
 	}
 
 	~FrameGenerator()
@@ -97,8 +93,6 @@ public:
 		}
 	}
 
-	HRESULT SetD3DManager(IUnknown* manager, UINT width, UINT height);
-	const bool HasD3DManager();
 	HRESULT EnsureRenderTarget(UINT width, UINT height);
 	HRESULT Generate(IMFSample* sample, REFGUID format, IMFSample** outSample);
 };
