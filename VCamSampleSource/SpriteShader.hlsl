@@ -1,4 +1,6 @@
 
+HLSL_EXTERNAL_INCLUDE(
+
 Texture2D captureTexture : register(t0);
 SamplerState captureTextureSampler : register(s0);
 
@@ -20,3 +22,5 @@ float4 PS(VSOut In) : SV_Target0
 {
     return captureTexture.Sample(captureTextureSampler, In.Uv);
 }
+
+)

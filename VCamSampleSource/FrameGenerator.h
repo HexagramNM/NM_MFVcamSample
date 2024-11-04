@@ -14,7 +14,6 @@ class FrameGenerator
 	ULONGLONG _frame;
 	MFTIME _prevTime;
 	UINT _fps;
-	HANDLE _deviceHandle;
 	wil::com_ptr_nothrow<ID3D11Texture2D> _texture;
 	wil::com_ptr_nothrow<ID2D1RenderTarget> _renderTarget;
 	wil::com_ptr_nothrow<ID2D1SolidColorBrush> _whiteBrush;
@@ -23,6 +22,11 @@ class FrameGenerator
 	wil::com_ptr_nothrow<IMFTransform> _converter;
 	wil::com_ptr_nothrow<IWICBitmap> _bitmap;
 	wil::com_ptr_nothrow<IMFDXGIDeviceManager> _dxgiManager;
+	wil::com_ptr_nothrow<ID3D11RenderTargetView> _renderTargetView;
+	wil::com_ptr_nothrow<ID3D11ShaderResourceView> _shaderResourceView;
+	wil::com_ptr_nothrow<ID3D11VertexShader> _spriteVS;
+	wil::com_ptr_nothrow<ID3D11PixelShader> _spritePS;
+	wil::com_ptr_nothrow<ID3D11InputLayout> _spriteInputLayout;
 
 	HRESULT CreateRenderTargetResources();
 
@@ -32,8 +36,6 @@ class FrameGenerator
 
 	com_ptr<ID3D11Texture2D> _sharedCaptureWindowTexture;
 	HANDLE _sharedCaptureWindowHandle;
-	com_ptr<ID3D11Texture2D> _cpuCaptureWindowTexture;
-	com_ptr<ID2D1Bitmap> _captureWindowBitmap;
 	int _captureTextureWidth;
 	int _captureTextureHeight;
 	
@@ -43,11 +45,17 @@ class FrameGenerator
 	int _captureWindowWidth;
 	int _captureWindowHeight;
 
-	void CreateSharedCaptureWindowTexture();
+	HRESULT SetupD3D11Device();
+
+	HRESULT CreateSharedCaptureWindowTexture();
+
+	HRESULT CreateSharedParamsTexture();
+
+	HRESULT SetupOffscreenRendering();
+
+	HRESULT SetupNV12Converter();
 
 	void DrawSharedCaptureWindow();
-
-	void CreateSharedParamsTexture();
 
 	void GetParamsFromTexture();
 	// 共有テクスチャのために追加した部分 END
@@ -58,7 +66,6 @@ public:
 		_height(0),
 		_frame(0),
 		_fps(0),
-		_deviceHandle(nullptr),
 		_prevTime(MFGetSystemTime()),
 		_captureTextureWidth(0),
 		_captureTextureHeight(0),
@@ -69,15 +76,6 @@ public:
 
 	~FrameGenerator()
 	{
-		if (_dxgiManager && _deviceHandle)
-		{
-			auto hr = _dxgiManager->CloseDeviceHandle(_deviceHandle); // don't report error at that point
-			if (FAILED(hr))
-			{
-				WINTRACE(L"FrameGenerator CloseDeviceHandle: 0x%08X", hr);
-			}
-		}
-
 		if (_sharedCaptureWindowHandle != NULL
 			&& _sharedCaptureWindowHandle != INVALID_HANDLE_VALUE)
 		{
