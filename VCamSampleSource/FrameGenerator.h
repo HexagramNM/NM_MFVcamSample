@@ -33,6 +33,7 @@ class FrameGenerator
 	// 共有テクスチャのために追加した部分
 	com_ptr<ID3D11Device1> _textureDevice;
 	com_ptr<ID3D11DeviceContext> _textureDeviceContext;
+	com_ptr<ID3D11Multithread> _deviceMutex;
 
 	com_ptr<ID3D11Texture2D> _sharedCaptureWindowTexture;
 	HANDLE _sharedCaptureWindowHandle;

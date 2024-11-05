@@ -34,6 +34,9 @@ HRESULT FrameGenerator::SetupD3D11Device() {
 		nullptr, createDeviceFlags, d3dFeatures, 1, D3D11_SDK_VERSION,
 		device.put(), nullptr, _textureDeviceContext.put()));
 
+	_textureDeviceContext->QueryInterface(IID_PPV_ARGS(_deviceMutex.put()));
+	_deviceMutex->SetMultithreadProtected(true);
+
 	_dxgiManager->ResetDevice(device.get(), resetToken);
 
 	device->QueryInterface(IID_PPV_ARGS(_textureDevice.put()));
@@ -322,9 +325,11 @@ HRESULT FrameGenerator::Generate(IMFSample* sample, REFGUID format, IMFSample** 
 	RETURN_HR_IF_NULL(E_POINTER, outSample);
 	*outSample = nullptr;
 
+	_deviceMutex->Enter();
 	GetParamsFromTexture();
 
 	DrawSharedCaptureWindow();
+	_deviceMutex->Leave();
 	// render something on image common to CPU & GPU
 	/*if (_renderTarget)
 	{
