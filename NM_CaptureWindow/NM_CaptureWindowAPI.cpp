@@ -1,4 +1,4 @@
-#include "NM_CaptureWindowAPI.h"
+﻿#include "NM_CaptureWindowAPI.h"
 
 NM_CaptureWindow* createCaptureWindowObject(HWND hwnd)
 {

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 struct MediaStream : winrt::implements<MediaStream, CBaseAttributes<IMFAttributes>, IMFMediaStream2, IKsControl>
 {

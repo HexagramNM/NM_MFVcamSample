@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 void TraceMFAttributes(IUnknown* unknown, PCWSTR prefix);
 std::wstring PKSIDENTIFIER_ToString(PKSIDENTIFIER id, ULONG length);

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 std::string to_string(const std::wstring& ws);
 std::wstring to_wstring(const std::string& s);

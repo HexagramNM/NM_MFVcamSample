@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "EnumNames.h"
 #include "Tools.h"
 #include "MFTools.h"

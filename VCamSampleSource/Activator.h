@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 struct Activator : winrt::implements<Activator, CBaseAttributes<IMFActivate>>
 {

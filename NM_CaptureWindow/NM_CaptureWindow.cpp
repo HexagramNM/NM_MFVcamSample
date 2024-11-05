@@ -1,4 +1,4 @@
-
+ï»¿
 #include <windows.h>
 #include <sddl.h>
 #include "NM_CaptureWindow.h"
@@ -73,7 +73,7 @@ void NM_CaptureWindow::CreateSharedCaptureWindowTexture() {
 		return;
 	}
 
-	//‘¼ƒvƒƒZƒX‚Æ‹¤—L‚·‚é‚½‚ß‚ÌƒeƒNƒXƒ`ƒƒ
+	//ä»–ãƒ—ãƒ­ã‚»ã‚¹ã¨å…±æœ‰ã™ã‚‹ãŸã‚ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	D3D11_TEXTURE2D_DESC bufferTextureDesc;
 
 	bufferTextureDesc.Width = MAX_SOURCE_WIDTH;
@@ -93,15 +93,15 @@ void NM_CaptureWindow::CreateSharedCaptureWindowTexture() {
 	com_ptr<IDXGIResource1> sharedCaptureWindowResource;
 	_bufferTextureForCapture->QueryInterface(IID_PPV_ARGS(sharedCaptureWindowResource.put()));
 
-	// Session0‚Å‚ ‚éFrameServer‚Å‹¤—LƒeƒNƒXƒ`ƒƒ‚ÉƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚·‚é‚½‚ßA
-	// SECURITY_ATTRIBUTES‚ğİ’è‚·‚é•K—v‚ª‚ ‚éB
+	// Session0ã§ã‚ã‚‹FrameServerã§å…±æœ‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã€
+	// SECURITY_ATTRIBUTESã‚’è¨­å®šã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
 	SECURITY_ATTRIBUTES secAttr;
 	secAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
 	secAttr.bInheritHandle = FALSE;
 	secAttr.lpSecurityDescriptor = NULL;
 
-	// Local Service‚É‚Ì‚İ“Ç‚İæ‚è‚ÌƒAƒNƒZƒXŒ i¡‰ñ‚ÌFrameServer‚ÌƒpƒCƒvƒ‰ƒCƒ“‚È‚ç‚±‚ê‚Å\•ªj
-	// Interactive UseriŒ»İ‚Ìƒ†[ƒUj‚É‘SƒAƒNƒZƒXŒ ‚ğ•t—^‚·‚é‚È‚ç(A;;GA;;;IU)‚ğ’Ç‰Á‚·‚éB
+	// Local Serviceã«ã®ã¿èª­ã¿å–ã‚Šã®ã‚¢ã‚¯ã‚»ã‚¹æ¨©ï¼ˆä»Šå›ã®FrameServerã®ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ãªã‚‰ã“ã‚Œã§ååˆ†ï¼‰
+	// Interactive Userï¼ˆç¾åœ¨ã®ãƒ¦ãƒ¼ã‚¶ï¼‰ã«å…¨ã‚¢ã‚¯ã‚»ã‚¹æ¨©ã‚’ä»˜ä¸ã™ã‚‹ãªã‚‰(A;;GA;;;IU)ã‚’è¿½åŠ ã™ã‚‹ã€‚
 	if (ConvertStringSecurityDescriptorToSecurityDescriptor(
 		TEXT("D:(A;;GR;;;LS)"),
 		SDDL_REVISION_1, &(secAttr.lpSecurityDescriptor), NULL)) {
@@ -145,15 +145,15 @@ void NM_CaptureWindow::CreateSharedParamsTexture() {
 	com_ptr<IDXGIResource1> sharedParamsResource;
 	_bufferParams->QueryInterface(IID_PPV_ARGS(sharedParamsResource.put()));
 
-	// Session0‚Å‚ ‚éFrameServer‚Å‹¤—LƒeƒNƒXƒ`ƒƒ‚ÉƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚·‚é‚½‚ßA
-	// SECURITY_ATTRIBUTES‚ğİ’è‚·‚é•K—v‚ª‚ ‚éB
+	// Session0ã§ã‚ã‚‹FrameServerã§å…±æœ‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã€
+	// SECURITY_ATTRIBUTESã‚’è¨­å®šã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
 	SECURITY_ATTRIBUTES secAttr;
 	secAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
 	secAttr.bInheritHandle = FALSE;
 	secAttr.lpSecurityDescriptor = NULL;
 
-	// Local Service‚É‚Ì‚İ“Ç‚İæ‚è‚ÌƒAƒNƒZƒXŒ i¡‰ñ‚ÌFrameServer‚ÌƒpƒCƒvƒ‰ƒCƒ“‚È‚ç‚±‚ê‚Å\•ªj
-	// Interactive UseriŒ»İ‚Ìƒ†[ƒUj‚É‘SƒAƒNƒZƒXŒ ‚ğ•t—^‚·‚é‚È‚ç(A;;GA;;;IU)‚ğ’Ç‰Á‚·‚éB
+	// Local Serviceã«ã®ã¿èª­ã¿å–ã‚Šã®ã‚¢ã‚¯ã‚»ã‚¹æ¨©ï¼ˆä»Šå›ã®FrameServerã®ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ãªã‚‰ã“ã‚Œã§ååˆ†ï¼‰
+	// Interactive Userï¼ˆç¾åœ¨ã®ãƒ¦ãƒ¼ã‚¶ï¼‰ã«å…¨ã‚¢ã‚¯ã‚»ã‚¹æ¨©ã‚’ä»˜ä¸ã™ã‚‹ãªã‚‰(A;;GA;;;IU)ã‚’è¿½åŠ ã™ã‚‹ã€‚
 	if (ConvertStringSecurityDescriptorToSecurityDescriptor(
 		TEXT("D:(A;;GR;;;LS)"),
 		SDDL_REVISION_1, &(secAttr.lpSecurityDescriptor), NULL)) {
@@ -244,7 +244,7 @@ void NM_CaptureWindow::SetTargetWindowForCapture(HWND targetWindow)
 		DirectXPixelFormat::B8G8R8A8UIntNormalized, 2, _capWinSize);
 	_frameArrivedForCapture = _framePoolForCapture.FrameArrived(auto_revoke, { this, &NM_CaptureWindow::OnFrameArrived });
 	_captureSession = _framePoolForCapture.CreateCaptureSession(_graphicsCaptureItem);
-	//IsCursorCaptureEnabled‚ÅƒJ[ƒ\ƒ‹‚àƒLƒƒƒvƒ`ƒƒ‚·‚é‚©w’è‚Å‚«‚éB
+	//IsCursorCaptureEnabledã§ã‚«ãƒ¼ã‚½ãƒ«ã‚‚ã‚­ãƒ£ãƒ—ãƒãƒ£ã™ã‚‹ã‹æŒ‡å®šã§ãã‚‹ã€‚
 	_captureSession.IsCursorCaptureEnabled(false);
 	_captureSession.StartCapture();
 }
@@ -280,7 +280,7 @@ void NM_CaptureWindow::OnFrameArrived(Direct3D11CaptureFramePool const& sender,
 			DirectXPixelFormat::B8G8R8A8UIntNormalized, 2, _capWinSize);
 	}
 
-	//ƒLƒƒƒvƒ`ƒƒ‚µ‚½ƒtƒŒ[ƒ€‚©‚ç“¾‚ç‚ê‚éƒeƒNƒXƒ`ƒƒ‚ğƒoƒbƒtƒ@ƒeƒNƒXƒ`ƒƒ‚ÉGPUã‚Åƒf[ƒ^ƒRƒs[
+	//ã‚­ãƒ£ãƒ—ãƒãƒ£ã—ãŸãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰å¾—ã‚‰ã‚Œã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒãƒƒãƒ•ã‚¡ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«GPUä¸Šã§ãƒ‡ãƒ¼ã‚¿ã‚³ãƒ”ãƒ¼
 	if (_bufferTextureForCapture != nullptr) {
 		com_ptr<ID3D11Texture2D> texture2D = getDXGIInterfaceFromObject<::ID3D11Texture2D>(frame.Surface());
 		com_ptr<IDXGIKeyedMutex> mutex;

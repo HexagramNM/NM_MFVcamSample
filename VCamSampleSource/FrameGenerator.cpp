@@ -1,4 +1,4 @@
-
+ï»¿
 #include "pch.h"
 #include "Undocumented.h"
 #include "Tools.h"
@@ -44,7 +44,7 @@ HRESULT FrameGenerator::SetupD3D11Device() {
 	return S_OK;
 }
 
-// ƒLƒƒƒvƒ`ƒƒƒEƒBƒ“ƒhƒE‚Ì‹¤—LƒeƒNƒXƒ`ƒƒ‚ðƒnƒ“ƒhƒ‹‚©‚çŽæ“¾B
+// ã‚­ãƒ£ãƒ—ãƒãƒ£ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®å…±æœ‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒãƒ³ãƒ‰ãƒ«ã‹ã‚‰å–å¾—ã€‚
 HRESULT FrameGenerator::CreateSharedCaptureWindowTexture()
 {
 	if (_sharedCaptureWindowTexture != nullptr)
@@ -64,8 +64,8 @@ HRESULT FrameGenerator::CreateSharedCaptureWindowTexture()
 	return S_OK;
 }
 
-// ƒLƒƒƒvƒ`ƒƒƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY‚È‚Çƒpƒ‰ƒƒ^‚ðŠi”[‚µ‚½‚Ì‹¤—LƒeƒNƒXƒ`ƒƒ‚ðƒnƒ“ƒhƒ‹‚©‚çŽæ“¾B
-// CPUã‚Åƒf[ƒ^‚ð“Ç‚Ý‚¾‚·‚½‚ß‚ÌƒeƒNƒXƒ`ƒƒ‚Ìì¬B
+// ã‚­ãƒ£ãƒ—ãƒãƒ£ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºãªã©ãƒ‘ãƒ©ãƒ¡ã‚¿ã‚’æ ¼ç´ã—ãŸã®å…±æœ‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒãƒ³ãƒ‰ãƒ«ã‹ã‚‰å–å¾—ã€‚
+// CPUä¸Šã§ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿ã ã™ãŸã‚ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ä½œæˆã€‚
 HRESULT FrameGenerator::CreateSharedParamsTexture()
 {
 	if (_sharedParamsTexture != nullptr)
@@ -100,7 +100,7 @@ HRESULT FrameGenerator::CreateSharedParamsTexture()
 	return S_OK;
 }
 
-// _renderTexture‚Ö‚ÌƒIƒtƒXƒNƒŠ[ƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒO‚Ì€”õ
+// _renderTextureã¸ã®ã‚ªãƒ•ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®æº–å‚™
 HRESULT FrameGenerator::SetupOffscreenRendering() {
 	DXGI_FORMAT dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
 	CD3D11_TEXTURE2D_DESC desc;
@@ -163,7 +163,7 @@ HRESULT FrameGenerator::SetupOffscreenRendering() {
 	return S_OK;
 }
 
-// NV12ƒtƒH[ƒ}ƒbƒg‚ÌƒRƒ“ƒo[ƒ^ (IMFTransform) ì¬
+// NV12ãƒ•ã‚©ãƒ¼ãƒžãƒƒãƒˆã®ã‚³ãƒ³ãƒãƒ¼ã‚¿ (IMFTransform) ä½œæˆ
 HRESULT FrameGenerator::SetupNV12Converter() {
 	// create GPU RGB => NV12 converter
 	RETURN_IF_FAILED(CoCreateInstance(CLSID_VideoProcessorMFT, nullptr, CLSCTX_ALL, IID_PPV_ARGS(_converter.put())));
