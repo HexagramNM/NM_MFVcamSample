@@ -19,7 +19,6 @@ class FrameGenerator
 	wil::com_ptr_nothrow<IMFDXGIDeviceManager> _dxgiManager;
 	wil::com_ptr_nothrow<ID3D11Device1> _dxDevice;
 	wil::com_ptr_nothrow<ID3D11DeviceContext> _dxDeviceContext;
-	wil::com_ptr_nothrow<ID3D11Multithread> _dxDeviceMutex;
 	wil::com_ptr_nothrow<ID3D11Texture2D> _renderTexture;
 	wil::com_ptr_nothrow<IMFTransform> _converter;
 	

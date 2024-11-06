@@ -34,8 +34,9 @@ HRESULT FrameGenerator::SetupD3D11Device() {
 		nullptr, createDeviceFlags, d3dFeatures, 1, D3D11_SDK_VERSION,
 		device.put(), nullptr, _dxDeviceContext.put()));
 
-	_dxDeviceContext->QueryInterface(IID_PPV_ARGS(_dxDeviceMutex.put()));
-	_dxDeviceMutex->SetMultithreadProtected(true);
+	wil::com_ptr_nothrow<ID3D11Multithread> dxMultiThread;
+	_dxDeviceContext->QueryInterface(IID_PPV_ARGS(dxMultiThread.put()));
+	dxMultiThread->SetMultithreadProtected(true);
 
 	_dxgiManager->ResetDevice(device.get(), resetToken);
 
@@ -307,11 +308,9 @@ HRESULT FrameGenerator::Generate(IMFSample* sample, REFGUID format, IMFSample** 
 	RETURN_HR_IF_NULL(E_POINTER, outSample);
 	*outSample = nullptr;
 
-	_dxDeviceMutex->Enter();
 	GetParamsFromTexture();
 
 	DrawSharedCaptureWindow();
-	_dxDeviceMutex->Leave();
 
 	wil::com_ptr_nothrow<IMFMediaBuffer> mediaBuffer;
 
