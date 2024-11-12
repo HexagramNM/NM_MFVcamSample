@@ -122,12 +122,12 @@ HRESULT FrameGenerator::SetupOffscreenRendering() {
 	CD3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc(D3D11_RTV_DIMENSION_TEXTURE2D, dxgiFormat);
 	RETURN_IF_FAILED(_dxDevice->CreateRenderTargetView(_renderTexture.get(),
 		&renderTargetViewDesc, _renderTargetView.put()));
+	_dxDeviceContext->OMSetRenderTargets(1, _renderTargetView.addressof(), nullptr);
 
 	CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, dxgiFormat);
 	RETURN_IF_FAILED(_dxDevice->CreateShaderResourceView(_sharedCaptureWindowTexture.get(),
 		&shaderResourceViewDesc, _shaderResourceView.put()));
 
-	_dxDeviceContext->OMSetRenderTargets(1, _renderTargetView.addressof(), nullptr);
 	D3D11_VIEWPORT vp = { 0.0f, 0.0f, (float)_width, (float)_height, 0.0f, 1.0f };
 	_dxDeviceContext->RSSetViewports(1, &vp);
 
@@ -142,9 +142,11 @@ HRESULT FrameGenerator::SetupOffscreenRendering() {
 
 	RETURN_IF_FAILED(_dxDevice->CreateVertexShader(compiledVS->GetBufferPointer(),
 		compiledVS->GetBufferSize(), nullptr, _spriteVS.put()));
+	_dxDeviceContext->VSSetShader(_spriteVS.get(), 0, 0);
 
 	RETURN_IF_FAILED(_dxDevice->CreatePixelShader(compiledPS->GetBufferPointer(),
 		compiledPS->GetBufferSize(), nullptr, _spritePS.put()));
+	_dxDeviceContext->PSSetShader(_spritePS.get(), 0, 0);
 
 	D3D11_INPUT_ELEMENT_DESC layout[2] = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -153,6 +155,7 @@ HRESULT FrameGenerator::SetupOffscreenRendering() {
 
 	RETURN_IF_FAILED(_dxDevice->CreateInputLayout(layout, 2, compiledVS->GetBufferPointer(),
 		compiledVS->GetBufferSize(), _spriteInputLayout.put()));
+	_dxDeviceContext->IASetInputLayout(_spriteInputLayout.get());
 
 	_vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	_vbDesc.ByteWidth = sizeof(VertexType) * 4;
@@ -160,6 +163,17 @@ HRESULT FrameGenerator::SetupOffscreenRendering() {
 	_vbDesc.StructureByteStride = 0;
 	_vbDesc.Usage = D3D11_USAGE_DEFAULT;
 	_vbDesc.CPUAccessFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA initData = {
+		_polygonVertex, sizeof(_polygonVertex), 0
+	};
+
+	_dxDevice->CreateBuffer(&_vbDesc, &initData, &_vertexBuffer);
+
+	UINT stride = sizeof(VertexType);
+	UINT offset = 0;
+	_dxDeviceContext->IASetVertexBuffers(0, 1, _vertexBuffer.addressof(), &stride, &offset);
+	_dxDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	return S_OK;
 }
@@ -245,27 +259,11 @@ void FrameGenerator::DrawSharedCaptureWindow()
 	float heightTextureRate = static_cast<float>(_captureWindowHeight) 
 		/ static_cast<float>(_captureTextureHeight);
 	
-	VertexType v[4] = {
-		{{-xPosRate, yPosRate, 0}, {0, 0}},
-		{{xPosRate, yPosRate, 0}, {widthTextureRate, 0}},
-		{{-xPosRate, -yPosRate, 0}, {0, heightTextureRate}},
-		{{xPosRate, -yPosRate, 0}, {widthTextureRate, heightTextureRate}}
-	};
-
-	wil::com_ptr_nothrow<ID3D11Buffer> vb;
-	D3D11_SUBRESOURCE_DATA initData = {
-		v, sizeof(v), 0
-	};
-
-	_dxDevice->CreateBuffer(&_vbDesc, &initData, &vb);
-
-	UINT stride = sizeof(VertexType);
-	UINT offset = 0;
-	_dxDeviceContext->IASetVertexBuffers(0, 1, vb.addressof(), &stride, &offset);
-	_dxDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	_dxDeviceContext->VSSetShader(_spriteVS.get(), 0, 0);
-	_dxDeviceContext->PSSetShader(_spritePS.get(), 0, 0);
-	_dxDeviceContext->IASetInputLayout(_spriteInputLayout.get());
+	_polygonVertex[0] = { {-xPosRate, yPosRate, 0}, {0, 0} };
+	_polygonVertex[1] = { {xPosRate, yPosRate, 0}, {widthTextureRate, 0} };
+	_polygonVertex[2] = { {-xPosRate, -yPosRate, 0}, {0, heightTextureRate} };
+	_polygonVertex[3] = { {xPosRate, -yPosRate, 0}, {widthTextureRate, heightTextureRate} };
+	_dxDeviceContext->UpdateSubresource(_vertexBuffer.get(), 0, nullptr, _polygonVertex, 0, 0);
 
 	wil::com_ptr_nothrow<IDXGIKeyedMutex> mutex;
 	_sharedCaptureWindowTexture->QueryInterface(IID_PPV_ARGS(mutex.put()));

@@ -27,7 +27,10 @@ class FrameGenerator
 	wil::com_ptr_nothrow<ID3D11VertexShader> _spriteVS;
 	wil::com_ptr_nothrow<ID3D11PixelShader> _spritePS;
 	wil::com_ptr_nothrow<ID3D11InputLayout> _spriteInputLayout;
+	
 	D3D11_BUFFER_DESC _vbDesc;
+	VertexType _polygonVertex[4];
+	wil::com_ptr_nothrow<ID3D11Buffer> _vertexBuffer;
 
 	wil::com_ptr_nothrow<ID3D11Texture2D> _sharedCaptureWindowTexture;
 	HANDLE _sharedCaptureWindowHandle;
