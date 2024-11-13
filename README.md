@@ -42,9 +42,11 @@ Windows10以前だと動きません。）
 
 * [DirectXでテクスチャを別プロセスに共有する](https://qiita.com/HexagramNM/items/5fa74f59f0b7bb4b80e9)
 
+* [DirectXとMediaFoundation仮想カメラとの効率の良い連携](https://qiita.com/HexagramNM/items/66895f843d12e4ebd203)
+
 ## やっていること
 
-Media Foundationの仮想カメラはFrameServerというサービス上で、Local Serviceのアカウントで
+MediaFoundationの仮想カメラはFrameServerというサービス上で、Local Serviceのアカウントで
 動作します。セッション0であるため、ユーザアカウントに表示しているウィンドウのハンドルを
 取得することができません。
 
@@ -56,6 +58,14 @@ Media Foundationの仮想カメラはFrameServerというサービス上で、Lo
 [IDXGIResource1::CreateSharedHandle](https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_2/nf-dxgi1_2-idxgiresource1-createsharedhandle)
 を使用しております。
 
+共有テクスチャはキャプチャしたウィンドウのサイズに合わせて表示されるよう、Direct3Dで別テクスチャにオフスクリーンレンダリングし、
+そのテクスチャをMediaFoundationの仮想カメラの映像サンプルとして渡しております。
+
+## ブランチ
+
+- main... 最新バージョン
+
+- Old_copyTextureToBitmap... オフスクリーンレンダリングをせず、CPU上にテクスチャのピクセルデータをコピーして処理していたころの古いコード。古い記事の参照用に別ブランチで残しております。
 
 ## プロジェクト構成
 
@@ -69,10 +79,14 @@ Media Foundationの仮想カメラはFrameServerというサービス上で、Lo
 基本的には[VCamSample](https://github.com/smourier/VCamSample)をそのまま使用しておりますが、
 以下の部分を変更しております。
 
-    - `FrameGenerator.h/.cpp`... 共有テクスチャを映し出せるように改造しています。
+    - `FrameGenerator.h/.cpp`... 共有テクスチャを映し出せるように改造しております。
+    また、GPU上で共有テクスチャを変形するためのオフスクリーンレンダリングを追加しております。
+
+    - `SpriteShader.hlsl`... 上記のオフスクリーンレンダリングに必要なシェーダコードを追加しております。
 
     - `MediaStream.cpp`... 仮想カメラの解像度を変更するために`NUM_IMAGE_COLS`,
     `NUM_IMAGE_ROWS`の値を変更しております。
+    また、`SetD3DManager`メソッドから不要になった設定を削除しております。
 
 * `SampleDriverApp` (C#)... WPFで作ったサンプルのGUIです。
 プログレスバーを適当に動かしております。
